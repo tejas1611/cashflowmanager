@@ -8,6 +8,7 @@ const addBillRecord = async (req, res) => {
     }
     console.log(billInfo);
     const modelParams = {
+      invoice_id: req.body.invoice_id,
       telegram_id: req.body.telegram_id,
       billInfo: billInfo,
       timeBought: req.body.timeBought,
