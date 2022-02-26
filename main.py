@@ -1,6 +1,7 @@
 import logging
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+import telegram
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -12,15 +13,35 @@ logger = logging.getLogger(__name__)
 # Define a few command handlers. These usually take the two arguments update and
 # context. Error handlers also receive the raised TelegramError object in error.
 def start(update, context):
-    update.message.reply_text('Hi!')
+    reply_markup = telegram.ReplyKeyboardMarkup([['Add new invoice','Get expenses report']],
+                                       one_time_keyboard=True,
+                                       resize_keyboard=True)
+    context.bot.send_message(chat_id=update.message.chat_id, text='Hi! What would you like to do today?', reply_markup=reply_markup)
 
 
 def help(update, context):
-    update.message.reply_text('Help!')
+    text = "This is a bot to help you track your daily expenses. \U0001F4B8 \n\nAdd a new invoice manually or simply send us a picture of your receipt and we will do the rest! \n\nYou can even try sending us voice commands "
+    context.bot.send_message(chat_id=update.message.chat_id, text=text)
 
 
-def echo(update, context):
-    update.message.reply_text(update.message.text)
+def add_invoice(update, context):
+    text = "Received an image. Updating your expenses"
+    context.bot.send_message(chat_id=update.message.chat_id, text=text)
+
+
+def respond_chat(update, context):
+    if "new invoice" in update.message.text:
+        text = "You can manually input your expenses as: \nCategory, Amount \nCategory, Amount \n... \n\n Or simply try uploading a picture of your receipt\U0001F4DD"
+    elif update.message.text == "Get expenses report":
+        text = "These are your expenses for this month:"
+    else:
+        text = "I didn't quite get that... \n\nPlease try again"
+    context.bot.send_message(chat_id=update.message.chat_id, text=text)
+
+
+def respond_voice(update, context):
+    text = "Analyzing voice command..."
+    context.bot.send_message(chat_id=update.message.chat_id, text=text)
 
 
 def error(update, context):
@@ -42,7 +63,9 @@ def main():
     dp.add_handler(CommandHandler("help", help))
 
     # on noncommand i.e message - echo the message on Telegram
-    dp.add_handler(MessageHandler(Filters.text, echo))
+    dp.add_handler(MessageHandler(Filters.text, respond_chat))
+    dp.add_handler(MessageHandler(Filters.document.image, add_invoice))
+    dp.add_handler(MessageHandler(Filters.audio, respond_voice))
 
     # log all errors
     dp.add_error_handler(error)
@@ -50,9 +73,6 @@ def main():
     # Start the Bot
     updater.start_polling()
 
-    # Run the bot until you press Ctrl-C or the process receives SIGINT,
-    # SIGTERM or SIGABRT. This should be used most of the time, since
-    # start_polling() is non-blocking and will stop the bot gracefully.
     updater.idle()
 
 
