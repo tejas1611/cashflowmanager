@@ -1,6 +1,7 @@
 import express from "express";
 import {
   addBillRecord,
+  getBillByInvoiceID,
   getBillsByTelegramID,
   getBillsByTelegramIDAndCategory,
 } from "../controller/billController";
@@ -8,7 +9,8 @@ import {
 const router = express.Router();
 
 router.post("/addBill", addBillRecord);
-router.get("/getBillsByID", getBillsByTelegramID);
-router.get("/getBillsByIDAndType", getBillsByTelegramIDAndCategory);
+router.get("/getBillByInvoiceID", getBillByInvoiceID);
+router.get("/getBillsByTelegramID", getBillsByTelegramID);
+router.get("/getBillsByTelegramIDAndType", getBillsByTelegramIDAndCategory);
 
 export default router;

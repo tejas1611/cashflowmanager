@@ -2,6 +2,11 @@ import mongoose from "mongoose";
 
 const BillSchema = mongoose.Schema(
   {
+    invoice_id: {
+      type: String,
+      required: true,
+      index: { unique: true },
+    },
     telegram_id: {
       type: String,
       required: true,
@@ -10,6 +15,7 @@ const BillSchema = mongoose.Schema(
       type: Map,
       of: mongoose.Decimal128,
     },
+
     timeBought: {
       type: Date,
       required: true,
