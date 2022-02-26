@@ -14,6 +14,10 @@ const BillSchema = mongoose.Schema(
       type: Date,
       required: true,
     },
+    expenseType: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,
