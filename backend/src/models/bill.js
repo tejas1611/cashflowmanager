@@ -24,6 +24,10 @@ const BillSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    vendorName: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,
