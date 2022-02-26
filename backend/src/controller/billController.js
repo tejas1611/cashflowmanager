@@ -24,4 +24,41 @@ const addBillRecord = async (req, res) => {
   }
 };
 
-export { addBillRecord };
+const getBillsByTelegramID = async (req, res) => {
+  try {
+    Bill.find(
+      {
+        telegram_id: req.body.telegram_id,
+      },
+      function (err, bills) {
+        if (err) {
+          console.log(err);
+          res.status(500).send(err);
+        }
+
+        bills = bills.map((bill) => {
+          const billInfo = {};
+          for (const [key, value] of bill.billInfo.entries()) {
+            billInfo[key] = parseFloat(bill.billInfo.get(key));
+          }
+          return {
+            _id: bill._id,
+            telegram_id: bill.telegram_id,
+            billInfo: billInfo,
+            timeBought: bill.timeBought,
+            createdAt: bill.createdAt,
+            updatedAt: bill.updatedAt,
+            __v: bill.__v,
+          };
+        });
+
+        res.status(200).json(bills);
+      }
+    );
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+
+export { addBillRecord, getBillsByTelegramID };

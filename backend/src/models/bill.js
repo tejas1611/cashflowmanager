@@ -5,7 +5,6 @@ const BillSchema = mongoose.Schema(
     telegram_id: {
       type: String,
       required: true,
-      index: { unique: true },
     },
     billInfo: {
       type: Map,
