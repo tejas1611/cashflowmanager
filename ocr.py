@@ -1,8 +1,17 @@
 import pytesseract
 import cv2
-img = cv2.imread('receipt.jpg')
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+img = cv2.imread('sample.jpg')
 
-img = cv2.resize(img, (600, 360))
-print(pytesseract.image_to_string(img))
-cv2.imshow('Result', img)
-cv2.waitKey(0)
+
+def getReceiptString(img):
+    
+    res_str = pytesseract.image_to_string(img)
+    print(res_str)
+    return res_str
+
+
+if __name__ == "__main__":
+    print(getReceiptString(img))
+    cv2.imshow('Result', img)
+    cv2.waitKey(0)

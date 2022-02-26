@@ -1,7 +1,10 @@
 import logging
-
+import urllib.request
+from PIL import Image
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import telegram
+from ocr import getReceiptString
+TOKEN = "5291304290:AAGRl3EzpoEcObIT8sR10qWxhvM0OffzPYI"
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -23,9 +26,29 @@ def help(update, context):
     text = "This is a bot to help you track your daily expenses. \U0001F4B8 \n\nAdd a new invoice manually or simply send us a picture of your receipt and we will do the rest! \n\nYou can even try sending us voice commands "
     context.bot.send_message(chat_id=update.message.chat_id, text=text)
 
+def save_image_from_message(message, context):
+    print("Inside func")
+    cid = message.chat_id
+
+    image_id =  message.document.file_id
+
+    context.bot.send_message(cid, '🔥 Analyzing image, be patient ! 🔥')
+
+    # # prepare image for downlading
+    file_path = context.bot.get_file(image_id).file_path
+
+    urllib.request.urlretrieve(file_path, "sample.png")
+    img = Image.open("sample.png")
+    img.show()
+    return img
+
 
 def add_invoice(update, context):
-    text = "Received an image. Updating your expenses"
+    print("Checking")
+    img = save_image_from_message(update.message, context)
+    
+    #text = "Received an image. Updating your expenses"
+    text = getReceiptString(img)
     context.bot.send_message(chat_id=update.message.chat_id, text=text)
 
 
@@ -53,7 +76,7 @@ def main():
     # Create the Updater and pass it your bot's token.
     # Make sure to set use_context=True to use the new context based callbacks
     # Post version 12 this will no longer be necessary
-    updater = Updater("5291304290:AAGRl3EzpoEcObIT8sR10qWxhvM0OffzPYI", use_context=True)
+    updater = Updater(TOKEN, use_context=True)
 
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
