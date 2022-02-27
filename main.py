@@ -4,6 +4,9 @@ from PIL import Image
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import telegram
 from ocr import getReceiptString
+from receipt_content_prediction import parseRecieptString
+import requests
+import time
 TOKEN = "5291304290:AAGRl3EzpoEcObIT8sR10qWxhvM0OffzPYI"
 
 # Enable logging
@@ -50,7 +53,24 @@ def add_invoice(update, context):
     #text = "Received an image. Updating your expenses"
     text = getReceiptString(img)
     context.bot.send_message(chat_id=update.message.chat_id, text=text)
+    
+    parsedString = parseRecieptString(text)
 
+    bodyData = {
+        "invoice_id": "737277375",
+        "telegram_id": update.chat.id,
+        "billItems": ["Noodles", "Choco Lava"],
+        "billCosts": [2.0, 3.0],
+        "timeBought": time.now(),
+        "expenseType": "Grocery",
+        "vendorName": "7 11"
+    }
+
+    response = requests.post("http://localhost:3000/bill/addBill", data=bodyData)
+
+    print(response.json())
+
+    return "Added bill data to database"
 
 def respond_chat(update, context):
     if "new invoice" in update.message.text:

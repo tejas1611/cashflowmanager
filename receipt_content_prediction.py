@@ -1,5 +1,5 @@
 from cv2 import extractChannel
-import regex
+
 FUEL_CAT= []
 GROCERY_CAT = ["Giant NTU"]
 FOOD_CAT = ["Little C"]
