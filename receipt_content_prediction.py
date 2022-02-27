@@ -1,7 +1,7 @@
 from cv2 import extractChannel
 
 FUEL_CAT= []
-GROCERY_CAT = ["Giant NTU"]
+GROCERY_CAT = ["GIANT NTU"]
 FOOD_CAT = ["Little C"]
 LENGTH = 8
 AMT_CONSTANTS = ["VISA","TOTAL", "AMOUNT"]
@@ -44,7 +44,6 @@ def parseRecieptString(rct_str):
     index += 1
 
   vendor = extract_dict["vendorName"].upper()
-
   if vendor in FUEL_CAT:
 
     extract_dict["expenseType"] = "Fuel"
