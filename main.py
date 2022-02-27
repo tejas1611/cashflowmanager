@@ -73,11 +73,24 @@ def add_invoice(update, context):
 
     return "Added bill data to database"
 
+def getExpenseReport(update, context):
+    bodyData = {
+        "telegram_id": update.message.chat.id,
+    }
+
+    response = requests.get("http://localhost:3000/bill/addBill", json=bodyData)
+
+    print(response.json())
+    report = """
+    =====================EXPENSES REPORT=====================
+    """
+
 def respond_chat(update, context):
     if "new invoice" in update.message.text:
         text = "You can manually input your expenses as: \nCategory, Amount \nCategory, Amount \n... \n\n Or simply try uploading a picture of your receipt\U0001F4DD"
     elif update.message.text == "Get expenses report":
         text = "These are your expenses for this month:"
+        getExpenseReport
     else:
         text = "I didn't quite get that... \n\nPlease try again"
     context.bot.send_message(chat_id=update.message.chat_id, text=text)
