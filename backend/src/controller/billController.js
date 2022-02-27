@@ -41,6 +41,7 @@ const getBillByInvoiceID = async (req, res) => {
         for (const [key, value] of bill.billInfo.entries()) {
           billInfo[key] = parseFloat(bill.billInfo.get(key));
         }
+        const amount = parseFloat(bill.amount);
         return {
           _id: bill._id,
           telegram_id: bill.telegram_id,
@@ -51,7 +52,7 @@ const getBillByInvoiceID = async (req, res) => {
           updatedAt: bill.updatedAt,
           invoice_id: bill.invoice_id,
           vendorName: bill.vendorName,
-          amount: bill.amount,
+          amount: amount,
           __v: bill.__v,
         };
       });
@@ -81,6 +82,7 @@ const getBillsByTelegramID = async (req, res) => {
           for (const [key, value] of bill.billInfo.entries()) {
             billInfo[key] = parseFloat(bill.billInfo.get(key));
           }
+          const amount = parseFloat(bill.amount);
           return {
             _id: bill._id,
             telegram_id: bill.telegram_id,
@@ -91,7 +93,7 @@ const getBillsByTelegramID = async (req, res) => {
             updatedAt: bill.updatedAt,
             invoice_id: bill.invoice_id,
             vendorName: bill.vendorName,
-            amount: bill.amount,
+            amount: amount,
             __v: bill.__v,
           };
         });
@@ -117,7 +119,7 @@ const getBillsByTelegramIDAndCategory = async (req, res) => {
           console.log(err);
           res.status(500).send(err);
         }
-
+        const amount = parseFloat(bill.amount);
         bills = bills.map((bill) => {
           const billInfo = {};
           for (const [key, value] of bill.billInfo.entries()) {
@@ -133,7 +135,56 @@ const getBillsByTelegramIDAndCategory = async (req, res) => {
             updatedAt: bill.updatedAt,
             invoice_id: bill.invoice_id,
             vendorName: bill.vendorName,
-            amount: bill.amount,
+            amount: amount,
+            __v: bill.__v,
+          };
+        });
+
+        res.status(200).json(bills);
+      }
+    );
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+
+const getBillsForPrevWeek = async (req, res) => {
+  try {
+    var start = new Date();
+    start.setDate(start.getDate() - 7);
+    const end = new Date();
+    Bill.find(
+      {
+        telegram_id: req.body.telegram_id,
+        timeBought: {
+          $gte: start,
+          $lte: end,
+        },
+      },
+      function (err, bills) {
+        if (err) {
+          console.log(err);
+          res.status(500).send(err);
+        }
+
+        bills = bills.map((bill) => {
+          const billInfo = {};
+          for (const [key, value] of bill.billInfo.entries()) {
+            billInfo[key] = parseFloat(bill.billInfo.get(key));
+          }
+          const amount = parseFloat(bill.amount);
+          return {
+            _id: bill._id,
+            telegram_id: bill.telegram_id,
+            billInfo: billInfo,
+            timeBought: bill.timeBought,
+            expenseType: bill.expenseType,
+            createdAt: bill.createdAt,
+            updatedAt: bill.updatedAt,
+            invoice_id: bill.invoice_id,
+            vendorName: bill.vendorName,
+            amount: amount,
             __v: bill.__v,
           };
         });
@@ -152,4 +203,5 @@ export {
   getBillByInvoiceID,
   getBillsByTelegramID,
   getBillsByTelegramIDAndCategory,
+  getBillsForPrevWeek,
 };
