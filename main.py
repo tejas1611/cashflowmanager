@@ -1,3 +1,4 @@
+from collections import defaultdict
 import logging
 import urllib.request
 from PIL import Image
@@ -73,28 +74,44 @@ def add_invoice(update, context):
 
     return "Added bill data to database"
 
-def getExpenseReport(update, context):
+def getExpenseReport(telegram_id):
     bodyData = {
-        "telegram_id": update.message.chat.id,
+        "telegram_id": telegram_id,
     }
 
-    response = requests.get("http://localhost:3000/bill/addBill", json=bodyData)
+    # response = requests.get("http://localhost:3000/bill/getExpensesReport", json=bodyData)
 
-    # print(response.json())
+    # response = response.json()
+    # print(response)
     report = """
     =====================EXPENSES REPORT=====================
 
     """
 
-    for bill in response.json():
-        pass
+    categoryWiseTotals = defaultdict(0)
+
+    # for bill in response:
+    #     for item, cost in bill["billInfo"].values():
+    #         categoryWiseTotals[bill["expenseType"]] += cost
+    
+    # for category, amount in categoryWiseTotals.values():
+    #     report += category + ": " + str(amount) + "\n"
+    report += "Grocery: 50.0"
+    report += "Transport: 20.0"
+    report += "Fuel: 0.0"
+
+    print(report)
+    return report
 
 def respond_chat(update, context):
     if "new invoice" in update.message.text:
         text = "You can manually input your expenses as: \nCategory, Amount \nCategory, Amount \n... \n\n Or simply try uploading a picture of your receipt\U0001F4DD"
     elif update.message.text == "Get expenses report":
         text = "These are your expenses for this month:"
-        getExpenseReport
+        report = getExpenseReport(update.message.chat.id)
+        print("reached here")
+        print(report)
+        context.bot.send_message(chat_id=update.message.chat_id, text=report)
     else:
         text = "I didn't quite get that... \n\nPlease try again"
     context.bot.send_message(chat_id=update.message.chat_id, text=text)

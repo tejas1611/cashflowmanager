@@ -2,6 +2,7 @@ import { Bill } from "../models/bill";
 
 const addBillRecord = async (req, res) => {
   try {
+    console.log(req.body);
     const billInfo = {};
     for (const i in req.body.billItems) {
       billInfo[req.body.billItems[i]] = req.body.billCosts[i];
