@@ -80,10 +80,14 @@ def getExpenseReport(update, context):
 
     response = requests.get("http://localhost:3000/bill/addBill", json=bodyData)
 
-    print(response.json())
+    # print(response.json())
     report = """
     =====================EXPENSES REPORT=====================
+
     """
+
+    for bill in response.json():
+        pass
 
 def respond_chat(update, context):
     if "new invoice" in update.message.text:
