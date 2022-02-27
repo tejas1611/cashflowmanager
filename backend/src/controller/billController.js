@@ -14,6 +14,7 @@ const addBillRecord = async (req, res) => {
       timeBought: req.body.timeBought,
       expenseType: req.body.expenseType,
       vendorName: req.body.vendorName,
+      amount: req.body.amount,
     };
     console.log(modelParams);
     const bill = new Bill(modelParams);
@@ -50,6 +51,7 @@ const getBillByInvoiceID = async (req, res) => {
           updatedAt: bill.updatedAt,
           invoice_id: bill.invoice_id,
           vendorName: bill.vendorName,
+          amount: bill.amount,
           __v: bill.__v,
         };
       });
@@ -89,6 +91,7 @@ const getBillsByTelegramID = async (req, res) => {
             updatedAt: bill.updatedAt,
             invoice_id: bill.invoice_id,
             vendorName: bill.vendorName,
+            amount: bill.amount,
             __v: bill.__v,
           };
         });
@@ -130,6 +133,7 @@ const getBillsByTelegramIDAndCategory = async (req, res) => {
             updatedAt: bill.updatedAt,
             invoice_id: bill.invoice_id,
             vendorName: bill.vendorName,
+            amount: bill.amount,
             __v: bill.__v,
           };
         });

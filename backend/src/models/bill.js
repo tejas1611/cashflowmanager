@@ -28,6 +28,10 @@ const BillSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    amount: {
+      type: mongoose.Decimal128,
+      required: true,
+    },
   },
   {
     timestamps: true,

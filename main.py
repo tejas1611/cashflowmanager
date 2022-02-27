@@ -6,7 +6,7 @@ import telegram
 from ocr import getReceiptString
 from receipt_content_prediction import parseRecieptString
 import requests
-import time
+from datetime import datetime
 TOKEN = "5291304290:AAGRl3EzpoEcObIT8sR10qWxhvM0OffzPYI"
 
 # Enable logging
@@ -57,16 +57,17 @@ def add_invoice(update, context):
     parsedString = parseRecieptString(text)
 
     bodyData = {
-        "invoice_id": "737277375",
-        "telegram_id": update.chat.id,
+        "invoice_id": "73776375",
+        "telegram_id": update.message.chat.id,
         "billItems": ["Noodles", "Choco Lava"],
         "billCosts": [2.0, 3.0],
-        "timeBought": time.now(),
+        "timeBought": datetime.now().isoformat(),
         "expenseType": "Grocery",
-        "vendorName": "7 11"
+        "vendorName": "7 11",
+        "amount": 5.0
     }
 
-    response = requests.post("http://localhost:3000/bill/addBill", data=bodyData)
+    response = requests.post("http://localhost:3000/bill/addBill", json=bodyData)
 
     print(response.json())
 
