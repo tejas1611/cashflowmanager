@@ -53,19 +53,19 @@ def add_invoice(update, context):
     #text = "Received an image. Updating your expenses"
     text = getReceiptString(img)
     context.bot.send_message(chat_id=update.message.chat_id, text=text)
-    
-    parsedString = parseRecieptString(text)
-
-    bodyData = {
-        "invoice_id": "73776375",
-        "telegram_id": update.message.chat.id,
-        "billItems": ["Noodles", "Choco Lava"],
-        "billCosts": [2.0, 3.0],
-        "timeBought": datetime.now().isoformat(),
-        "expenseType": "Grocery",
-        "vendorName": "7 11",
-        "amount": 5.0
-    }
+    bodyData = parseRecieptString(text)
+    bodyData["telegram_id"] = update.message.chat.id
+    bodyData["timeBought"] = datetime.now().isoformat()
+    # bodyData = {
+    #     "invoice_id": "73776375",
+    #     "telegram_id": update.message.chat.id,
+    #     "billItems": ["Noodles", "Choco Lava"],
+    #     "billCosts": [2.0, 3.0],
+    #     "timeBought": datetime.now().isoformat(),
+    #     "expenseType": "Grocery",
+    #     "vendorName": "7 11",
+    #     "amount": 5.0
+    # }
 
     response = requests.post("http://localhost:3000/bill/addBill", json=bodyData)
 
